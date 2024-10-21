@@ -4,7 +4,7 @@ const ridecontroller = require("../controllers/rideController")
 
 router.post('/create', ridecontroller.createride);      
 router.put('/update/:id', ridecontroller.updateRide)
-router.delete('/rides/:id', ridecontroller.deleteRide);
+router.delete('/delete/:id', ridecontroller.deleteRide);
 router.post('/fetch-drivers', ridecontroller.fetchDrivers);
 
 
