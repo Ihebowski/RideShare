@@ -87,16 +87,43 @@ exports.updateRide = async (req, res) => {
 
 exports.deleteRide = async (req, res) => {
     try {
-        const deletedRide = await Ride.findByIdAndDelete(req.params.id);
+        // Find the ride to be deleted and populate passengers and driver details
+        const ride = await Ride.findById(req.params.id).populate('passengers user', 'name email');
 
-        if (!deletedRide) {
+        if (!ride) {
             return res.status(404).json({ status: 'error', message: 'Ride not found' });
         }
-        res.status(200).json({ status: 'success', message: 'Ride deleted successfully' });
+
+        // Notify all passengers that the ride is being cancelled
+        const passengerNotifications = ride.passengers.map(passenger => {
+            return new Notification({
+                rideId: ride._id,
+                userId: passenger._id,
+                driverId: ride.user._id,  // Assuming 'user' is the driver
+                message: `The ride from ${ride.startLocation} to ${ride.endLocation} has been cancelled by the driver.`,
+                status: 'cancelled'
+            });
+        });
+
+        // Save all passenger notifications
+        await Notification.insertMany(passengerNotifications);
+
+        // Delete all existing notifications related to the ride except those with 'cancelled' status
+        await Notification.deleteMany({ rideId: ride._id, status: { $ne: 'cancelled' } });
+
+        // Finally, delete the ride
+        await Ride.findByIdAndDelete(req.params.id);
+
+        res.status(200).json({ status: 'success', message: 'Ride and related notifications deleted successfully, and passengers have been notified.' });
+
     } catch (error) {
+        console.error(error);
         res.status(500).json({ status: 'error', message: 'Error deleting ride', error: error.message });
     }
 };
+
+
+
 
 exports.joinRide = async (req, res) => {
     
@@ -228,25 +255,47 @@ exports.leaveRide = async (req, res) => {
     try {
         const { rideId, userId } = req.body;
 
-        const ride = await Ride.findById(rideId);
+        const ride = await Ride.findById(rideId).populate('user'); // Populate to get the driver info
 
         if (!ride) {
             return res.status(404).json({ status: 'error', message: 'Ride not found' });
         }
+
         const passengerIndex = ride.passengers.indexOf(userId);
         if (passengerIndex === -1) {
             return res.status(400).json({ status: 'error', message: 'User not a passenger in this ride' });
         }
 
+        // Remove passenger from the passengers array
         ride.passengers.splice(passengerIndex, 1);
+
+        // Increment available seats
         ride.availableSeats += 1;
 
         await ride.save();
 
-        res.status(200).json({ status: 'success', message: 'Left the ride successfully', ride });
+        // Find the passenger who left the ride
+        const passenger = await User.findById(userId);
+        if (!passenger) {
+            return res.status(404).json({ status: 'error', message: 'Passenger not found' });
+        }
+
+        // Send notification to the driver
+        const notification = new Notification({
+            rideId: ride._id,
+            userId: ride.user._id, // Driver ID
+            driverId: ride.user._id, // Driver is the one receiving the notification
+            message: `Passenger ${passenger.name} has left the ride.`,
+            status: 'left'
+        });
+
+        await notification.save();
+
+        res.status(200).json({ status: 'success', message: 'Left the ride successfully and driver notified.', ride });
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 'error', message: 'Error leaving the ride', error: error.message });
     }
 };
+

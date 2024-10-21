@@ -22,7 +22,7 @@ const notificationSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'accepted', 'declined'],
+        enum: ['pending', 'accepted', 'declined','left','cancelled'],
         default: 'pending'
     }
 }, { timestamps: true });
