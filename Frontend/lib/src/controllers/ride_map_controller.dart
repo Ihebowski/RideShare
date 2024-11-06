@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:rideshare/src/controllers/create_ride_controller.dart';
-import 'package:rideshare/src/controllers/find_ride_controller.dart';
+import 'package:get/get.dart';
 
 class RideMapController extends GetxController {
   late MapController mapController;
 
   RxBool isSelectingLocation = false.obs;
-  final CreateRideController createRideController =
-      Get.put(CreateRideController());
-  final FindRideController findRideController = Get.put(FindRideController());
+  Rx<GeoPoint?> selectedLocation = Rx<GeoPoint?>(null);
 
   @override
   void onInit() {
@@ -35,8 +31,7 @@ class RideMapController extends GetxController {
     mapController.listenerMapLongTapping.addListener(() {
       var tappedLocation = handleMapLongTap();
       if (tappedLocation != null) {
-        createRideController.setSelectedLocation(tappedLocation);
-        findRideController.setSelectedLocation(tappedLocation);
+        selectedLocation.value = tappedLocation;
         String location =
             "Lat: ${tappedLocation.latitude}, Lng: ${tappedLocation.longitude}";
         print("Selected location: $location");

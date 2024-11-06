@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideshare/src/views/home_view.dart';
+import 'package:rideshare/src/views/profile_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -13,8 +14,8 @@ class _MainViewState extends State<MainView> {
 
   final List<Widget> viewsList = [
     HomeView(),
-    Center(child: Text('History View')),
-    Center(child: Text('Profile View')),
+    ProfileView(),
+    ProfileView(),
   ];
 
   @override

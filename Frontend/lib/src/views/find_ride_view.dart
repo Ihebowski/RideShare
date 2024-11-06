@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:get/get.dart';
 import 'package:rideshare/src/controllers/find_ride_controller.dart';
+import 'package:rideshare/src/controllers/ride_controller.dart';
 import 'package:rideshare/src/controllers/ride_map_controller.dart';
-import 'package:rideshare/src/views/choose_ride_view.dart';
 import 'package:rideshare/src/views/notification_view.dart';
 
 class FindRideView extends StatelessWidget {
   FindRideView({super.key});
 
   final RideMapController rideMapController = Get.find<RideMapController>();
-  final FindRideController findRideController = Get.find<FindRideController>();
+  final FindRideController findRideController = Get.put(FindRideController());
+  final RideController rideController = Get.put(RideController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,10 @@ class FindRideView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Get.delete<FindRideController>();
+            Get.back();
+          },
           icon: const Icon(Icons.arrow_back),
           style: const ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(Colors.white),
@@ -77,7 +81,7 @@ class FindRideView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(5.0),
                               color: Colors.white,
                             ),
-                            child: Icon(Icons.add),
+                            child: const Icon(Icons.add),
                           ),
                         ),
                         GestureDetector(
@@ -91,7 +95,7 @@ class FindRideView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(5.0),
                               color: Colors.white,
                             ),
-                            child: Icon(Icons.remove),
+                            child: const Icon(Icons.remove),
                           ),
                         ),
                       ],
@@ -174,8 +178,17 @@ class FindRideView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextField(
+                            readOnly: true,
                             controller: TextEditingController(
-                                text: findRideController.fromLocation.value),
+                              text: findRideController
+                                              .fromLocation.value.latitude ==
+                                          0 &&
+                                      findRideController
+                                              .fromLocation.value.longitude ==
+                                          0
+                                  ? ''
+                                  : 'Lat: ${findRideController.fromLocation.value.latitude.toStringAsFixed(3)}, Lng: ${findRideController.fromLocation.value.longitude.toStringAsFixed(3)}',
+                            ),
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.grey.shade100,
@@ -186,7 +199,12 @@ class FindRideView extends StatelessWidget {
                               prefixIcon: const Icon(Icons.location_on),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  findRideController.fromLocation.value.isEmpty
+                                  findRideController.fromLocation.value
+                                                  .latitude ==
+                                              0 &&
+                                          findRideController.fromLocation.value
+                                                  .longitude ==
+                                              0
                                       ? Icons.gps_not_fixed
                                       : Icons.gps_fixed,
                                 ),
@@ -223,8 +241,18 @@ class FindRideView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextField(
+                            readOnly: true,
+                            // Make it read-only since we are using GeoPoints
                             controller: TextEditingController(
-                                text: findRideController.toLocation.value),
+                              text: findRideController
+                                              .toLocation.value.latitude ==
+                                          0 &&
+                                      findRideController
+                                              .toLocation.value.longitude ==
+                                          0
+                                  ? ''
+                                  : 'Lat: ${findRideController.toLocation.value.latitude.toStringAsFixed(3)}, Lng: ${findRideController.toLocation.value.longitude.toStringAsFixed(3)}',
+                            ),
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.grey.shade100,
@@ -235,14 +263,18 @@ class FindRideView extends StatelessWidget {
                               prefixIcon: const Icon(Icons.location_on),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  findRideController.toLocation.value.isEmpty
+                                  findRideController
+                                                  .toLocation.value.latitude ==
+                                              0 &&
+                                          findRideController
+                                                  .toLocation.value.longitude ==
+                                              0
                                       ? Icons.gps_not_fixed
                                       : Icons.gps_fixed,
                                 ),
                                 onPressed: () {
                                   findRideController.isSelectingLocation.value =
                                       true;
-
                                   findRideController.isFromLocation.value =
                                       false;
                                   rideMapController.enableLocationSelection();
@@ -257,50 +289,40 @@ class FindRideView extends StatelessWidget {
                             onTap: () {
                               findRideController.isSelectingLocation.value =
                                   true;
-
                               findRideController.isFromLocation.value = false;
                               rideMapController.enableLocationSelection();
                             },
                           ),
                         ),
-                        Container(
-                          height: 50.0,
-                          width: double.infinity,
-                          margin: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: TextButton(
-                            onPressed: () {
-                              if (findRideController
-                                      .fromLocation.value.isEmpty ||
-                                  findRideController.toLocation.value.isEmpty) {
-                                Get.snackbar(
-                                  "Error",
-                                  "Please fill all required fields!",
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.7),
-                                  colorText: Colors.black,
-                                );
-                              } else {
-                                findRideController.publishRide();
-                                Get.to(ChooseRideView());
-                              }
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                Colors.grey.shade100,
-                              ),
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                        Obx(
+                          () => Container(
+                            height: 50.0,
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: TextButton(
+                              onPressed: () => findRideController.findRide(),
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  Colors.grey.shade100,
+                                ),
+                                shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
                                 ),
                               ),
-                            ),
-                            child: const Text(
-                              "Find Now",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              child: findRideController.isLoading.value
+                                  ? CircularProgressIndicator(
+                                      color: Colors.black,
+                                    )
+                                  : const Text(
+                                      "Find Now",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),

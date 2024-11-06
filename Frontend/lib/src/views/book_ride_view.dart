@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rideshare/src/controllers/book_ride_controller.dart';
+import 'package:rideshare/src/models/ride_model.dart';
+import 'package:rideshare/src/views/main_view.dart';
 import 'package:rideshare/src/views/notification_view.dart';
 
 class BookRideView extends StatelessWidget {
-  const BookRideView({super.key});
+  final Ride ride;
+
+  BookRideView({super.key, required this.ride});
+
+  final BookRideController bookRideController = Get.put(BookRideController());
 
   @override
   Widget build(BuildContext context) {
     final deviceHeight = MediaQuery.of(context).size.height;
     final deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Colors.grey.shade50,
         leading: IconButton(
           onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back),
@@ -77,7 +84,7 @@ class BookRideView extends StatelessWidget {
                             Text(
                               overflow: TextOverflow.clip,
                               maxLines: 1,
-                              "Lat: 36.81278304355647, Lng: 10.168033946644158",
+                              "Lat: ${ride.startLocation.first.toStringAsFixed(3)}, Lng: ${ride.startLocation.last.toStringAsFixed(3)}",
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.black,
@@ -89,7 +96,7 @@ class BookRideView extends StatelessWidget {
                             Text(
                               overflow: TextOverflow.clip,
                               maxLines: 1,
-                              "Lat: 36.76559195343551, Lng: 10.196873057972283",
+                              "Lat: ${ride.endLocation.first.toStringAsFixed(3)}, Lng: ${ride.endLocation.last.toStringAsFixed(3)}",
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.black,
@@ -127,7 +134,7 @@ class BookRideView extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "18 October 2024",
+                            ride.date.split('T').first,
                             style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
@@ -147,7 +154,7 @@ class BookRideView extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "10:20AM",
+                            ride.time,
                             style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
@@ -167,7 +174,7 @@ class BookRideView extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "4",
+                            ride.availableSeats.toString(),
                             style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
@@ -201,7 +208,7 @@ class BookRideView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Iheb Barrah",
+                            ride.user.name,
                             style: TextStyle(
                               fontSize: 24.0,
                               color: Colors.black,
@@ -243,29 +250,35 @@ class BookRideView extends StatelessWidget {
             ),
             Column(
               children: [
-                Container(
-                  height: 50.0,
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: TextButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Colors.grey.shade600,
-                      ),
-                      shape: WidgetStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                Obx(
+                  () => Container(
+                    height: 50.0,
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: TextButton(
+                      onPressed: () => bookRideController.bookRide(ride.id),
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Colors.grey.shade600,
+                        ),
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
                         ),
                       ),
-                    ),
-                    child: const Text(
-                      "Book Ride",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      child: bookRideController.isLoading.value
+                          ? CircularProgressIndicator(
+                              color: Colors.black,
+                            )
+                          : const Text(
+                              "Book Ride",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -274,7 +287,7 @@ class BookRideView extends StatelessWidget {
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(vertical: 10.0),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () => Get.offAll(() => MainView()),
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
                         Colors.white,
@@ -286,7 +299,7 @@ class BookRideView extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      "Schedule Ride",
+                      "Cancel",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.0,
