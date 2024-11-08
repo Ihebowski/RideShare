@@ -143,7 +143,7 @@ exports.joinRide = async (req, res) => {
         if (!ride) return res.status(404).send('Ride not found');
 
         if (ride.availableSeats <= 0) {
-            return res.status(400).send('No available seats for this ride');
+            return res.status(401).send('No available seats for this ride');
         }
 
         const passenger = await User.findById(userId);

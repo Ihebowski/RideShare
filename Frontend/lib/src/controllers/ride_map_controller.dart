@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:rideshare/src/controllers/create_ride_controller.dart';
-import 'package:rideshare/src/controllers/find_ride_controller.dart';
+import 'package:get/get.dart';
 
 class RideMapController extends GetxController {
   late MapController mapController;
 
   RxBool isSelectingLocation = false.obs;
-  final CreateRideController createRideController =
-      Get.put(CreateRideController());
-  final FindRideController findRideController = Get.put(FindRideController());
+  RxBool isMapLoading = true.obs;
+
+  Rx<GeoPoint?> selectedLocation = Rx<GeoPoint?>(null);
 
   @override
   void onInit() {
+    super.onInit();
+
     mapController = MapController.customLayer(
-      initPosition: GeoPoint(latitude: 36.8510313, longitude: 10.1591322),
       customTile: CustomTile(
         sourceName: "maptiler",
         tileExtension: ".png",
@@ -30,20 +29,18 @@ class RideMapController extends GetxController {
           "PGtPsIii0XU0MH3Cry9i",
         ),
       ),
+      initPosition: GeoPoint(latitude: 36.8510313, longitude: 10.1591322),
     );
 
     mapController.listenerMapLongTapping.addListener(() {
       var tappedLocation = handleMapLongTap();
       if (tappedLocation != null) {
-        createRideController.setSelectedLocation(tappedLocation);
-        findRideController.setSelectedLocation(tappedLocation);
+        selectedLocation.value = tappedLocation;
         String location =
             "Lat: ${tappedLocation.latitude}, Lng: ${tappedLocation.longitude}";
         print("Selected location: $location");
       }
     });
-
-    super.onInit();
   }
 
   GeoPoint? handleMapLongTap() {
@@ -76,4 +73,14 @@ class RideMapController extends GetxController {
   void enableLocationSelection() {
     isSelectingLocation.value = true;
   }
+
+  Future<void> removeMarkerAt(GeoPoint point) async {
+    try {
+      await mapController.removeMarker(point);
+      print("Marker removed at: Lat: ${point.latitude}, Lng: ${point.longitude}");
+    } catch (e) {
+      print("Error removing marker: $e");
+    }
+  }
+
 }

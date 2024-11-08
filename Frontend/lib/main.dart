@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rideshare/src/controllers/user_controller.dart';
+import 'package:rideshare/src/views/login_view.dart';
 import 'package:rideshare/src/views/main_view.dart';
+import 'package:rideshare/src/views/register_view.dart';
+import 'package:rideshare/src/wrapper.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -17,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MainView(),
+      home: Wrapper(),
     );
   }
 }

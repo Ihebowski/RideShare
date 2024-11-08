@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:get/get.dart';
+import 'package:rideshare/src/controllers/choose_ride_controller.dart';
+import 'package:rideshare/src/controllers/ride_controller.dart';
 import 'package:rideshare/src/controllers/ride_map_controller.dart';
 import 'package:rideshare/src/views/book_ride_view.dart';
 import 'package:rideshare/src/views/notification_view.dart';
+import 'package:rideshare/src/views/widgets/user_ride_card.dart';
 
-class ChooseRideView extends StatelessWidget {
-  ChooseRideView({super.key});
+class ChooseRideView extends StatefulWidget {
+  const ChooseRideView({super.key});
 
+  @override
+  State<ChooseRideView> createState() => _ChooseRideViewState();
+}
+
+class _ChooseRideViewState extends State<ChooseRideView> {
   final RideMapController rideMapController = Get.find<RideMapController>();
+  final RideController rideController = Get.find<RideController>();
+  final ChooseRideController chooseRideController =
+      Get.put(ChooseRideController());
+  int selectedRideIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +62,14 @@ class ChooseRideView extends StatelessWidget {
                 initZoom: 15,
                 minZoomLevel: 10,
                 maxZoomLevel: 19,
+              ),
+            ),
+            mapIsLoading: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -122,26 +142,33 @@ class ChooseRideView extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
                     child: SizedBox(
                       height: 300.0,
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: [
-                          _userRidesCard(
-                            "Iheb Barrah",
-                            true,
-                            deviceWidth
-                          ),
-                          _userRidesCard(
-                              "Iheb Barrah",
-                              false,
-                              deviceWidth
-                          ),
-                          _userRidesCard(
-                              "Iheb Barrah",
-                              false,
-                              deviceWidth
-                          ),
-                        ],
-                      ),
+                      child: Obx(() {
+                        if (rideController.driversList.isEmpty) {
+                          return Center(
+                            child: Text("No drivers available."),
+                          );
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const ScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          itemCount: rideController.driversList.length,
+                          itemBuilder: (context, index) {
+                            final ride = rideController.driversList[index];
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedRideIndex = index;
+                                });
+                              },
+                              child: UserRideCard(
+                                ride: ride,
+                                selected: selectedRideIndex == index,
+                              ),
+                            );
+                          },
+                        );
+                      }),
                     ),
                   ),
                   Container(
@@ -153,7 +180,21 @@ class ChooseRideView extends StatelessWidget {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        Get.to(BookRideView());
+                        if (selectedRideIndex != -1) {
+                          Get.to(
+                            BookRideView(
+                              ride:
+                                  rideController.driversList[selectedRideIndex],
+                            ),
+                          );
+                        } else {
+                          Get.snackbar(
+                            "Error",
+                            "Please select a ride!",
+                            backgroundColor: Colors.white.withOpacity(0.7),
+                            colorText: Colors.black,
+                          );
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(
@@ -178,69 +219,6 @@ class ChooseRideView extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _userRidesCard(String user, bool selected, double deviceWidth) {
-    return Container(
-      height: 100.0,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: selected ? Colors.black.withOpacity(0.025) : Colors.white,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          CircleAvatar(
-            radius: 35.0,
-            backgroundColor: Colors.black.withOpacity(0.025),
-          ),
-          SizedBox(
-            width: deviceWidth * 0.39,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "14 October",
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.7),
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "10:40 PM",
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.7),
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Image.asset(
-            "assets/images/car.png",
-            height: 100.0,
-            width: 100.0,
           ),
         ],
       ),

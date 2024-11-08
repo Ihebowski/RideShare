@@ -10,7 +10,7 @@ class CreateRideView extends StatelessWidget {
 
   final RideMapController rideMapController = Get.find<RideMapController>();
   final CreateRideController createRideController =
-      Get.find<CreateRideController>();
+      Get.put(CreateRideController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,10 @@ class CreateRideView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Get.delete<CreateRideController>();
+            Get.back();
+          },
           icon: const Icon(Icons.arrow_back),
           style: const ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(Colors.white),
@@ -50,6 +53,14 @@ class CreateRideView extends StatelessWidget {
                 initZoom: 13,
                 minZoomLevel: 5,
                 maxZoomLevel: 19,
+              ),
+            ),
+            mapIsLoading: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -169,7 +180,7 @@ class CreateRideView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               _userDateCard(
-                                "Go Now",
+                                "Go Today",
                                 () {
                                   createRideController.isGoNowSelected.value =
                                       true;
@@ -223,8 +234,17 @@ class CreateRideView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextField(
+                            keyboardType: TextInputType.text,
                             controller: TextEditingController(
-                                text: createRideController.fromLocation.value),
+                              text: createRideController
+                                              .fromLocation.value.latitude ==
+                                          0 &&
+                                      createRideController
+                                              .fromLocation.value.longitude ==
+                                          0
+                                  ? ''
+                                  : 'Lat: ${createRideController.fromLocation.value.latitude.toStringAsFixed(3)}, Lng: ${createRideController.fromLocation.value.longitude.toStringAsFixed(3)}',
+                            ),
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.grey.shade100,
@@ -235,8 +255,12 @@ class CreateRideView extends StatelessWidget {
                               prefixIcon: const Icon(Icons.location_on),
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  createRideController
-                                          .fromLocation.value.isEmpty
+                                  createRideController.fromLocation.value
+                                                  .latitude ==
+                                              0 &&
+                                          createRideController.fromLocation
+                                                  .value.longitude ==
+                                              0
                                       ? Icons.gps_not_fixed
                                       : Icons.gps_fixed,
                                 ),
@@ -273,8 +297,17 @@ class CreateRideView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextField(
+                            keyboardType: TextInputType.text,
                             controller: TextEditingController(
-                                text: createRideController.toLocation.value),
+                              text: createRideController
+                                              .toLocation.value.latitude ==
+                                          0 &&
+                                      createRideController
+                                              .toLocation.value.longitude ==
+                                          0
+                                  ? ''
+                                  : 'Lat: ${createRideController.toLocation.value.latitude.toStringAsFixed(3)}, Lng: ${createRideController.toLocation.value.longitude.toStringAsFixed(3)}',
+                            ),
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.grey.shade100,
@@ -286,7 +319,11 @@ class CreateRideView extends StatelessWidget {
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   createRideController
-                                          .fromLocation.value.isEmpty
+                                                  .toLocation.value.latitude ==
+                                              0 &&
+                                          createRideController
+                                                  .toLocation.value.longitude ==
+                                              0
                                       ? Icons.gps_not_fixed
                                       : Icons.gps_fixed,
                                 ),
@@ -316,80 +353,153 @@ class CreateRideView extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: TextField(
-                            controller: TextEditingController(
-                                text: createRideController.selectedTime.value),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey.shade100,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                                borderSide: BorderSide.none,
-                              ),
-                              prefixIcon: const Icon(Icons.access_time),
-                              label: const Text("Time"),
-                              labelStyle: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.black.withOpacity(0.5),
-                              ),
-                            ),
-                            onTap: () async {
-                              FocusScope.of(context).requestFocus(FocusNode());
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Time",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: SizedBox(
+                                      width: deviceWidth * 0.43,
+                                      child: TextField(
+                                        keyboardType: TextInputType.datetime,
+                                        controller: TextEditingController(
+                                            text: createRideController
+                                                .selectedTime.value),
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.grey.shade100,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          prefixIcon:
+                                              const Icon(Icons.access_time),
+                                          label: const Text("Time"),
+                                          labelStyle: TextStyle(
+                                            fontSize: 16.0,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                          ),
+                                        ),
+                                        onTap: () async {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
 
-                              TimeOfDay? pickedTime = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
+                                          TimeOfDay? pickedTime =
+                                              await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now(),
+                                          );
 
-                              if (pickedTime != null) {
-                                String formattedTime =
-                                    "${pickedTime.hour}:${pickedTime.minute.toString().padLeft(2, '0')}";
-                                createRideController.selectedTime.value =
-                                    formattedTime;
-                              }
-                            },
+                                          if (pickedTime != null) {
+                                            String formattedTime =
+                                                "${pickedTime.hour}:${pickedTime.minute.toString().padLeft(2, '0')}";
+                                            createRideController.selectedTime
+                                                .value = formattedTime;
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Seats",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: SizedBox(
+                                      width: deviceWidth * 0.43,
+                                      child: TextField(
+                                        keyboardType: TextInputType.number,
+                                        controller: TextEditingController(
+                                            text: createRideController
+                                                .seats.value
+                                                .toString()),
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.grey.shade100,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          prefixIcon: const Icon(
+                                              Icons.event_seat_outlined),
+                                          label: const Text("Seats"),
+                                          labelStyle: TextStyle(
+                                            fontSize: 16.0,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                          ),
+                                        ),
+                                        onChanged: (value) {
+                                          int? seatCount = int.tryParse(value);
+                                          if (seatCount != null) {
+                                            createRideController
+                                                .setSeats(seatCount);
+                                          } else {
+                                            createRideController.setSeats(0);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          height: 50.0,
-                          width: double.infinity,
-                          margin: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: TextButton(
-                            onPressed: () {
-                              if (createRideController.fromLocation.value.isEmpty ||
-                                  createRideController
-                                      .toLocation.value.isEmpty ||
-                                  createRideController
-                                      .selectedTime.value.isEmpty ||
-                                  createRideController.selectedDate.isEmpty) {
-                                Get.snackbar(
-                                  "Error",
-                                  "Please fill all required fields!",
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.7),
-                                  colorText: Colors.black,
-                                );
-                              } else {
-                                createRideController.publishRide();
-                              }
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                Colors.grey.shade100,
-                              ),
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                        Obx(
+                          () => Container(
+                            height: 50.0,
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: TextButton(
+                              onPressed: () =>
+                                  createRideController.publishRide(),
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  Colors.grey.shade100,
+                                ),
+                                shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
                                 ),
                               ),
-                            ),
-                            child: const Text(
-                              "Publish Now",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              child: createRideController.isLoading.value
+                                  ? CircularProgressIndicator(
+                                      color: Colors.black,
+                                    )
+                                  : const Text(
+                                      "Publish Now",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
