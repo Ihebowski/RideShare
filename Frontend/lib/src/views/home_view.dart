@@ -48,6 +48,19 @@ class HomeView extends StatelessWidget {
                 maxZoomLevel: 19,
               ),
             ),
+            onMapIsReady: (bool isReady) async {
+              if (isReady) {
+                rideMapController.isMapLoading.value = false;
+              }
+            },
+            mapIsLoading: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
           Positioned(
             bottom: 0.0,
@@ -101,7 +114,7 @@ class HomeView extends StatelessWidget {
                     color: Colors.black.withOpacity(0.05),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

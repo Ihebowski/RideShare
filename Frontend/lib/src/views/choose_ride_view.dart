@@ -64,6 +64,14 @@ class _ChooseRideViewState extends State<ChooseRideView> {
                 maxZoomLevel: 19,
               ),
             ),
+            mapIsLoading: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
           Positioned(
             bottom: 0.0,
@@ -175,8 +183,9 @@ class _ChooseRideViewState extends State<ChooseRideView> {
                         if (selectedRideIndex != -1) {
                           Get.to(
                             BookRideView(
-                                ride: rideController
-                                    .driversList[selectedRideIndex]),
+                              ride:
+                                  rideController.driversList[selectedRideIndex],
+                            ),
                           );
                         } else {
                           Get.snackbar(

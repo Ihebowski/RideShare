@@ -56,6 +56,14 @@ class FindRideView extends StatelessWidget {
                 maxZoomLevel: 19,
               ),
             ),
+            mapIsLoading: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
           Positioned(
             top: deviceHeight / 2,

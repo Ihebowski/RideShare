@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rideshare/src/controllers/login_controller.dart';
 import 'package:rideshare/src/controllers/register_controller.dart';
 
 class RegisterView extends StatelessWidget {

@@ -21,7 +21,10 @@ class CreateRideView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Get.delete<CreateRideController>();
+            Get.back();
+          },
           icon: const Icon(Icons.arrow_back),
           style: const ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(Colors.white),
@@ -50,6 +53,14 @@ class CreateRideView extends StatelessWidget {
                 initZoom: 13,
                 minZoomLevel: 5,
                 maxZoomLevel: 19,
+              ),
+            ),
+            mapIsLoading: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               ),
             ),
           ),

@@ -16,22 +16,7 @@ class ProfileView extends StatelessWidget {
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade50,
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back),
-          style: const ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.white),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => Get.to(NotificationView()),
-            icon: const Icon(Icons.notifications),
-            style: const ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Colors.white),
-            ),
-          ),
-        ],
+        surfaceTintColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -190,64 +175,34 @@ class ProfileView extends StatelessWidget {
                   ),
                 ],
               ),
-              Column(
-                children: [
-                  Container(
-                    height: 50.0,
-                    width: double.infinity,
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: TextButton(
-                      onPressed: () {
-                        userController.clearUserData();
-                        Get.offAll(() => Wrapper());
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          Colors.grey.shade600,
-                        ),
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        "Logout",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+              Container(
+                height: 50.0,
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                child: TextButton(
+                  onPressed: () {
+                    userController.clearUserData();
+                    Get.offAll(() => Wrapper());
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(
+                      Colors.grey.shade600,
+                    ),
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
                   ),
-                  Container(
-                    height: 50.0,
-                    width: double.infinity,
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: TextButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          Colors.white,
-                        ),
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        "Schedule Ride",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                  child: const Text(
+                    "Logout",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),

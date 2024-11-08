@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideshare/src/views/history_view.dart';
 import 'package:rideshare/src/views/home_view.dart';
 import 'package:rideshare/src/views/profile_view.dart';
 
@@ -14,7 +15,7 @@ class _MainViewState extends State<MainView> {
 
   final List<Widget> viewsList = [
     HomeView(),
-    ProfileView(),
+    HistoryView(),
     ProfileView(),
   ];
 

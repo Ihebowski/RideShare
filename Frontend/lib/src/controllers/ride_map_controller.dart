@@ -6,12 +6,15 @@ class RideMapController extends GetxController {
   late MapController mapController;
 
   RxBool isSelectingLocation = false.obs;
+  RxBool isMapLoading = true.obs;
+
   Rx<GeoPoint?> selectedLocation = Rx<GeoPoint?>(null);
 
   @override
   void onInit() {
+    super.onInit();
+
     mapController = MapController.customLayer(
-      initPosition: GeoPoint(latitude: 36.8510313, longitude: 10.1591322),
       customTile: CustomTile(
         sourceName: "maptiler",
         tileExtension: ".png",
@@ -26,6 +29,7 @@ class RideMapController extends GetxController {
           "PGtPsIii0XU0MH3Cry9i",
         ),
       ),
+      initPosition: GeoPoint(latitude: 36.8510313, longitude: 10.1591322),
     );
 
     mapController.listenerMapLongTapping.addListener(() {
@@ -37,8 +41,6 @@ class RideMapController extends GetxController {
         print("Selected location: $location");
       }
     });
-
-    super.onInit();
   }
 
   GeoPoint? handleMapLongTap() {
@@ -71,4 +73,14 @@ class RideMapController extends GetxController {
   void enableLocationSelection() {
     isSelectingLocation.value = true;
   }
+
+  Future<void> removeMarkerAt(GeoPoint point) async {
+    try {
+      await mapController.removeMarker(point);
+      print("Marker removed at: Lat: ${point.latitude}, Lng: ${point.longitude}");
+    } catch (e) {
+      print("Error removing marker: $e");
+    }
+  }
+
 }
