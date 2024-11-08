@@ -15,7 +15,6 @@ class RegisterController extends GetxController {
   var password = "".obs;
   var isPasswordVisible = false.obs;
   var phone = "".obs;
-  var role = "passenger".obs;
 
   var isLoading = false.obs;
 
@@ -58,8 +57,7 @@ class RegisterController extends GetxController {
       name: name.value,
       email: email.value,
       password: password.value,
-      phone: phone.value,
-      role: role.value
+      phone: phone.value
     );
 
     var response = await authService.register(user);

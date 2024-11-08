@@ -4,7 +4,6 @@ class User {
   final String email;
   final String password;
   final String phone;
-  final String role;
 
   User({
     required this.id,
@@ -12,7 +11,6 @@ class User {
     required this.email,
     required this.password,
     required this.phone,
-    required this.role,
   });
 
   User.withoutId({
@@ -20,7 +18,6 @@ class User {
     required this.email,
     required this.password,
     required this.phone,
-    required this.role,
   }) : id = '';
 
   Map<String, dynamic> toJson() {
@@ -29,7 +26,6 @@ class User {
       'email': email,
       'password': password,
       'phone': phone,
-      'role': role,
     };
   }
 
@@ -40,7 +36,6 @@ class User {
       email: json['email'] ?? '',
       password: json['password'] ?? '',
       phone: json['phone'] ?? '',
-      role: json['role'] ?? '',
     );
   }
 }

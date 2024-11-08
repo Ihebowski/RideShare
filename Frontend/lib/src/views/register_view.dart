@@ -65,7 +65,7 @@ class RegisterView extends StatelessWidget {
                         ),
                         SizedBox(height: 20.0),
                         const Text(
-                          "Full Name",
+                          "Name",
                           style: TextStyle(
                             fontSize: 18.0,
                             color: Colors.black,
@@ -142,7 +142,7 @@ class RegisterView extends StatelessWidget {
                                 borderSide: BorderSide.none,
                               ),
                               prefixIcon: const Icon(Icons.email_outlined),
-                              label: const Text("Phone"),
+                              label: const Text("Phone Number"),
                               labelStyle: TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.black.withOpacity(0.5),
