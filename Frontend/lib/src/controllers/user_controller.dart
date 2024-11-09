@@ -8,7 +8,6 @@ class UserController extends GetxController {
   var name = ''.obs;
   var email = ''.obs;
   var phone = ''.obs;
-  var role = ''.obs;
 
   @override
   void onInit() {
@@ -31,13 +30,11 @@ class UserController extends GetxController {
     await prefs.setString('name', user['name']);
     await prefs.setString('email', user['email']);
     await prefs.setString('phone', user['phone']);
-    await prefs.setString('role', user['role']);
 
     userId.value = user['_id'];
     name.value = user['name'];
     email.value = user['email'];
     phone.value = user['phone'];
-    role.value = user['role'];
   }
 
   Future<void> loadUserData() async {
@@ -46,7 +43,6 @@ class UserController extends GetxController {
     name.value = prefs.getString('name') ?? '';
     email.value = prefs.getString('email') ?? '';
     phone.value = prefs.getString('phone') ?? '';
-    role.value = prefs.getString('role') ?? '';
   }
 
   Future<void> clearUserData() async {
@@ -55,12 +51,10 @@ class UserController extends GetxController {
     await prefs.remove('name');
     await prefs.remove('email');
     await prefs.remove('phone');
-    await prefs.remove('role');
 
     userId.value = '';
     name.value = '';
     email.value = '';
     phone.value = '';
-    role.value = '';
   }
 }

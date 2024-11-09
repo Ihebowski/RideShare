@@ -106,7 +106,8 @@ exports.deleteRide = async (req, res) => {
                 userId: passenger._id,
                 driverId: ride.user._id,  
                 message: `The ride from ${ride.startLocation} to ${ride.endLocation} has been cancelled by the driver.`,
-                status: 'cancelled'
+                status: 'cancelled',
+                type: 'response'
             });
         });
 
@@ -126,19 +127,14 @@ exports.deleteRide = async (req, res) => {
     }
 };
 
-
-
-
 exports.joinRide = async (req, res) => {
-    
-
     console.log('Request Body:', req.body);
 
     const { rideId, userId } = req.body;
     console.log('Ride ID:', rideId);
     console.log('Passenger ID:', userId);
+
     try {
-       
         const ride = await Ride.findById(rideId);
         if (!ride) return res.status(404).send('Ride not found');
 
@@ -163,12 +159,11 @@ exports.joinRide = async (req, res) => {
             userId,
             driverId: ride.user, 
             message: `Passenger ${passenger.name} has requested to join the ride.`,
-            status: 'pending'
+            status: 'pending',
+            type: 'request' // Set type as 'request'
         });
 
         await notification.save();
-
-       
 
         res.status(200).send('Notification sent to the driver.');
     } catch (error) {
@@ -194,31 +189,29 @@ exports.respondToRequest = async (req, res) => {
         if (!passenger) return res.status(404).send('Passenger not found');
 
         if (response === 'accept') {
-          
             if (ride.passengers.includes(passenger._id)) {
                 return res.status(400).send('Passenger is already in the ride.');
             }
 
             ride.passengers.push(passenger._id);
-
-           
             ride.availableSeats -= 1;
             await ride.save();
 
-            notification.status = 'accepted';
-            await notification.save();
+            // Delete the old notification
+            await Notification.deleteOne({ _id: notification._id });
 
+            // Create a new notification for the passenger
             const passengerNotification = new Notification({
                 rideId: ride._id,
                 userId: passenger._id,
                 driverId: driver._id,
                 message: `Driver ${driver.name} has accepted your request. Contact them at ${driver.phone} or ${driver.email}.`,
-                status: 'accepted'
+                status: 'accepted',
+                type: 'response' // Set type as 'response'
             });
 
             await passengerNotification.save();
 
-        
             if (ride.availableSeats === 0) {
                 ride.status = 'in_progress';
                 await ride.save();
@@ -226,16 +219,17 @@ exports.respondToRequest = async (req, res) => {
 
             res.status(200).send('Ride accepted, passenger added to the ride, and seats updated.');
         } else if (response === 'decline') {
-      
-            notification.status = 'declined';
-            await notification.save();
+            // Delete the old notification
+            await Notification.deleteOne({ _id: notification._id });
 
+            // Create a new notification for the passenger
             const passengerNotification = new Notification({
                 rideId: ride._id,
                 userId: passenger._id,
                 driverId: driver._id,
                 message: `Driver ${driver.name} has declined your request.`,
-                status: 'declined'
+                status: 'declined',
+                type: 'response' // Set type as 'response'
             });
 
             await passengerNotification.save();
@@ -249,62 +243,6 @@ exports.respondToRequest = async (req, res) => {
         res.status(500).send('Error processing response');
     }
 };
-
-exports.getUserNotifications = async (req, res) => {
-    try {
-        const { userId } = req.params;
-
-        if (!userId) {
-            return res.status(400).send('User ID is required');
-        }
-
-        const notifications = await Notification.find({ userId })
-            .populate('rideId', 'startLocation endLocation date time') 
-            .populate('driverId', 'name email phone'); 
-
-        const filteredNotifications = notifications.filter(notification => 
-            !notification.message.includes('has requested to join the ride')
-        );
-
-        res.status(200).json({
-            status: 'success',
-            notifications: filteredNotifications,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching notifications');
-    }
-};
-
-
-exports.getNotificationsForDriver = async (req, res) => {
-    try {
-        
-        const driverId = req.params.driverId;
-
-        if (!driverId) {
-            return res.status(400).json({ status: 'error', message: 'Driver ID is required' });
-        }
-
-        const notifications = await Notification.find({ driverId })
-            .populate('rideId', 'startLocation endLocation date time') 
-            .populate('userId', 'name email'); 
-
-            const filteredNotifications = notifications.filter(notification => 
-                !notification.message.includes('has accepted your request') && 
-                !notification.message.includes('has been cancelled by the driver')
-            );
-    
-            res.status(200).json({
-                status: 'success',
-                notifications: filteredNotifications,
-            });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ status: 'error', message: 'Error fetching notifications', error: error.message });
-    }
-};
-
 
 exports.leaveRide = async (req, res) => {
     try {
@@ -337,7 +275,8 @@ exports.leaveRide = async (req, res) => {
             userId: ride.user._id, 
             driverId: ride.user._id, 
             message: `Passenger ${passenger.name} has left the ride.`,
-            status: 'left'
+            status: 'left',
+            type: 'response' // Set type as 'response'
         });
 
         await notification.save();
@@ -347,6 +286,40 @@ exports.leaveRide = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 'error', message: 'Error leaving the ride', error: error.message });
+    }
+};
+
+exports.getNotificationsById = async (req, res) => {
+    try {
+        console.log('Request Body:', req.body);
+
+        const { id } = req.body;
+        console.log("Ride ID:",id);
+
+        if (!id) {
+            return res.status(400).json({ status: 'error', message: 'ID is required' });
+        }
+
+        // Find all notifications where either the userId or the driverId matches the given ID
+        const notifications = await Notification.find({
+            $or: [{ userId: id }, { driverId: id }]
+        })
+        .populate('rideId', 'startLocation endLocation date time') // Populate ride details
+        .populate('userId', 'name email') // Populate user details
+        .populate('driverId', 'name email phone'); // Populate driver details
+
+        if (!notifications.length) {
+            return res.status(404).json({ status: 'error', message: 'No notifications found for this ID' });
+        }
+
+        // Return all matching notifications
+        res.status(200).json({
+            status: 'success',
+            notifications: notifications,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Error fetching notifications', error: error.message });
     }
 };
 

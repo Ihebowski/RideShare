@@ -24,6 +24,11 @@ const notificationSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'accepted', 'declined','left','cancelled'],
         default: 'pending'
+    },
+    type: {
+        type: String,
+        enum: ['request', 'response'],
+        default: ''
     }
 }, { timestamps: true });
 

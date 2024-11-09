@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:get/get.dart';
 import 'package:rideshare/src/controllers/ride_controller.dart';
+import 'package:rideshare/src/controllers/ride_map_controller.dart';
 import 'package:rideshare/src/models/ride_model.dart';
 import 'package:rideshare/src/services/ride_service.dart';
 import 'package:rideshare/src/views/choose_ride_view.dart';
-import 'ride_map_controller.dart';
 
 class FindRideController extends GetxController {
   final RideMapController rideMapController = Get.find<RideMapController>();

@@ -9,9 +9,8 @@ router.post('/fetch-drivers', ridecontroller.fetchDrivers);
 
 
 router.post('/join', ridecontroller.joinRide);
-router.post('/reponse', ridecontroller.respondToRequest);
-router.get('/getallnotifdriver/:driverId',ridecontroller.getNotificationsForDriver)
-router.get('/getallnotifuser/:userId',ridecontroller.getUserNotifications)
+router.post('/response', ridecontroller.respondToRequest);
+router.post('/getnotifbyid',ridecontroller.getNotificationsById)
 router.post('/leave', ridecontroller.leaveRide);
 
 module.exports=router

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:rideshare/src/controllers/ride_map_controller.dart';
 import 'package:rideshare/src/views/create_ride_view.dart';
 import 'package:rideshare/src/views/find_ride_view.dart';
+import 'package:rideshare/src/views/notification_view.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});
@@ -26,7 +27,7 @@ class HomeView extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Get.to(() => NotificationView()),
             icon: const Icon(Icons.notifications),
             style: const ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(Colors.white)),

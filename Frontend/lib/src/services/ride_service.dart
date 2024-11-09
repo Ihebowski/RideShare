@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:rideshare/src/views/main_view.dart';
 
 class RideService {
   static const String baseUrl = "http://10.0.2.2:5000/api/rides/";
@@ -19,9 +20,20 @@ class RideService {
         }),
       );
       if (response.statusCode == 200) {
+        Get.snackbar(
+          "Success",
+          "Rides loaded successfully!",
+          backgroundColor: Colors.white.withOpacity(0.7),
+          colorText: Colors.black,
+        );
         return response;
       } else {
-        print("Failed to fetch drivers: ${response.statusCode}");
+        Get.snackbar(
+          "Error",
+          "Failed to fetch drivers: ${response.statusCode}",
+          backgroundColor: Colors.white.withOpacity(0.7),
+          colorText: Colors.black,
+        );
         return null;
       }
     } catch (e) {
@@ -41,13 +53,14 @@ class RideService {
           "userId": userId,
         }),
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         Get.snackbar(
           "Success",
-          "Ride booked successfully!",
+          response.body,
           backgroundColor: Colors.white.withOpacity(0.7),
           colorText: Colors.black,
         );
+        Get.offAll(MainView());
         return response;
       } else if (response.statusCode == 400) {
         Get.snackbar(
@@ -102,9 +115,20 @@ class RideService {
         }),
       );
       if (response.statusCode == 201) {
+        Get.snackbar(
+          "Success",
+          "Ride created successfully!",
+          backgroundColor: Colors.white.withOpacity(0.7),
+          colorText: Colors.black,
+        );
         return response;
       } else {
-        print("Failed to create ride: ${response.statusCode}");
+        Get.snackbar(
+          "Error",
+          "Failed to fetch drivers: ${response.statusCode}",
+          backgroundColor: Colors.white.withOpacity(0.7),
+          colorText: Colors.black,
+        );
         return null;
       }
     } catch (e) {

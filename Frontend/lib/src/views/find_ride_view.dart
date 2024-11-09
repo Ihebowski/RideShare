@@ -56,6 +56,11 @@ class FindRideView extends StatelessWidget {
                 maxZoomLevel: 19,
               ),
             ),
+            onMapIsReady: (bool isReady) async {
+              if (isReady) {
+                rideMapController.isMapLoading.value = false;
+              }
+            },
             mapIsLoading: Container(
               color: Colors.black.withOpacity(0.5),
               child: Center(

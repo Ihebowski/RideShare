@@ -43,6 +43,7 @@ class ProfileView extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 48.0,
+                          backgroundColor: Colors.grey.shade50,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),

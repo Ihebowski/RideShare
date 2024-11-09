@@ -107,31 +107,8 @@ class CreateRideController extends GetxController {
     isLoading.value = false;
 
     if (response != null) {
-      var jsonData = jsonDecode(response.body);
-      if (jsonData["status"] == "success") {
-        Get.snackbar(
-          "Success",
-          "Ride created successfully!",
-          backgroundColor: Colors.white.withOpacity(0.7),
-          colorText: Colors.black,
-        );
         Get.offAll(() => MainView());
-      } else {
-        Get.snackbar(
-          "Error",
-          "Failed to create ride: ${jsonData["message"]}",
-          backgroundColor: Colors.white.withOpacity(0.7),
-          colorText: Colors.black,
-        );
       }
-    } else {
-      Get.snackbar(
-        "Error",
-        "Failed to create ride.",
-        backgroundColor: Colors.white.withOpacity(0.7),
-        colorText: Colors.black,
-      );
-    }
   }
 
   void resetRideData() {

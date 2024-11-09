@@ -201,6 +201,7 @@ class BookRideView extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 32.0,
+                        backgroundColor: Colors.grey.shade50,
                       ),
                       SizedBox(width: 20.0),
                       Column(
