@@ -54,7 +54,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/rides', rideRoutes);
 
 // Start the server
-const PORT = process.env.PORT || 5000; // Use environment variable for port
+const PORT = process.env.PORT || 9001; // Use environment variable for port
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
