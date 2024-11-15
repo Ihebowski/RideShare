@@ -53,6 +53,10 @@ cron.schedule('0 0 * * *', async () => {
 app.use('/api/users', userRoutes);
 app.use('/api/rides', rideRoutes);
 
+app.get('/', (req, res) => {
+    res.send('RideShare Running');
+  });
+
 // Start the server
 const PORT = process.env.PORT || 3000; // Use environment variable for port
 app.listen(PORT, () => {
