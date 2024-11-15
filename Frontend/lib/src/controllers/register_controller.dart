@@ -15,6 +15,7 @@ class RegisterController extends GetxController {
   var password = "".obs;
   var isPasswordVisible = false.obs;
   var phone = "".obs;
+  var isChecked = false.obs;
 
   var isLoading = false.obs;
 
@@ -38,6 +39,10 @@ class RegisterController extends GetxController {
     phone.value = value;
   }
 
+  void toggleCheckbox(bool value) {
+    isChecked.value = value;
+  }
+
   Future<void> registerUser() async {
     if (email.value.isEmpty ||
         password.value.isEmpty ||
@@ -46,6 +51,16 @@ class RegisterController extends GetxController {
       Get.snackbar(
         "Error",
         "Please fill all required fields!",
+        backgroundColor: Colors.white.withOpacity(0.7),
+        colorText: Colors.black,
+      );
+      return;
+    }
+
+    if (!isChecked.value) {
+      Get.snackbar(
+        "Error",
+        "Please read the term and conditions!",
         backgroundColor: Colors.white.withOpacity(0.7),
         colorText: Colors.black,
       );
@@ -66,7 +81,7 @@ class RegisterController extends GetxController {
       if (jsonData['message'] == "User registered successfully") {
         Get.snackbar(
           "Success",
-          "Login successful!",
+          "Registered successful!",
           backgroundColor: Colors.white.withOpacity(0.7),
           colorText: Colors.black,
         );

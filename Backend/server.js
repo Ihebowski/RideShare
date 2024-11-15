@@ -7,6 +7,9 @@ const cron = require('node-cron');
 const userRoutes = require('./routes/userRoutes');
 const rideRoutes = require('./routes/rideRoutes');
 
+// Import dotenv to load environment variables from .env file
+require('dotenv').config();
+
 // Import models
 const User = require('./models/user');           // Assuming User model exists
 const Ride = require('./models/ride');           // Assuming Ride model exists
@@ -19,17 +22,18 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/rideshare', {
+// MongoDB Atlas connection string
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 .then(() => {
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB Atlas');
 })
 .catch((error) => {
-    console.log('MongoDB connection error:', error);
+    console.log('MongoDB Atlas connection error:', error);
 });
+
 cron.schedule('0 0 * * *', async () => {
     try {
         
@@ -45,6 +49,7 @@ cron.schedule('0 0 * * *', async () => {
         console.error('Error deleting scheduled rides:', error);
     }
 });
+
 app.use('/api/users', userRoutes);
 app.use('/api/rides', rideRoutes);
 

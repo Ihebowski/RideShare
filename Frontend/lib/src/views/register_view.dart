@@ -76,6 +76,7 @@ class RegisterView extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextField(
                             onChanged: registerController.setName,
+                            keyboardType: TextInputType.name,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.grey.shade100,
@@ -105,6 +106,7 @@ class RegisterView extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextField(
                             onChanged: registerController.setEmail,
+                            keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.grey.shade100,
@@ -134,6 +136,7 @@ class RegisterView extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextField(
                             onChanged: registerController.setPhone,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.grey.shade100,
@@ -141,7 +144,7 @@ class RegisterView extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20.0),
                                 borderSide: BorderSide.none,
                               ),
-                              prefixIcon: const Icon(Icons.email_outlined),
+                              prefixIcon: const Icon(Icons.phone_android),
                               label: const Text("Phone Number"),
                               labelStyle: TextStyle(
                                 fontSize: 16.0,
@@ -164,6 +167,7 @@ class RegisterView extends StatelessWidget {
                           child: Obx(
                             () => TextField(
                               onChanged: registerController.setPassword,
+                              keyboardType: TextInputType.text,
                               obscureText:
                                   !registerController.isPasswordVisible.value,
                               decoration: InputDecoration(
@@ -191,6 +195,30 @@ class RegisterView extends StatelessWidget {
                               ),
                             ),
                           ),
+                        ),
+                        SizedBox(height: 10.0),
+                        Row(
+                          children: [
+                            Obx(
+                              () => Checkbox(
+                                fillColor: WidgetStatePropertyAll(Colors.white),
+                                checkColor: Colors.black,
+                                value: registerController.isChecked.value,
+                                onChanged: (bool? value) {
+                                  registerController
+                                      .toggleCheckbox(value ?? false);
+                                },
+                              ),
+                            ),
+                            const Text(
+                              "I agree to the Terms and Conditions",
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
