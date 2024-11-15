@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:rideshare/src/models/user_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthService {
-  final String baseUrl = "http://10.0.2.2:5000/api/users";
+  static final String baseUrl =
+      dotenv.env['API_URL'] ?? 'http://10.0.2.2:9001' + "/api/users/";
 
   Future<http.Response?> register(User user) async {
     try {

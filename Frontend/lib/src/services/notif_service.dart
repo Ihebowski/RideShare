@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rideshare/src/models/notification_model.dart';
 import 'package:rideshare/src/views/main_view.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NotificationService {
-  final String baseUrl = 'http://10.0.2.2:5000/api/rides';
+  static final String baseUrl =
+      dotenv.env['API_URL'] ?? 'http://10.0.2.2:9001' + "/api/rides/";
 
   Future<List<NotificationModel>> getNotificationById(String id) async {
     try {

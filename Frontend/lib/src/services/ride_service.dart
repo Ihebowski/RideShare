@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rideshare/src/views/main_view.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RideService {
-  static const String baseUrl = "http://10.0.2.2:5000/api/rides/";
+  static final String baseUrl =
+      dotenv.env['API_URL'] ?? 'http://10.0.2.2:9001' + "/api/rides/";
 
   Future<http.Response?> fetchDrivers(
       List<double> startLocation, List<double> endLocation) async {

@@ -136,14 +136,14 @@ class ProfileView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "---",
+                              "Change Password",
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.grey,
                               ),
                             ),
                             Text(
-                              "---",
+                              "",
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.black,
@@ -156,14 +156,14 @@ class ProfileView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "---",
+                              "Delete Account",
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.grey,
                               ),
                             ),
                             Text(
-                              "---",
+                              "",
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.black,
