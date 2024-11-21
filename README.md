@@ -81,7 +81,7 @@ lib/
 │   ├── widgets/                # Reusable widgets
 │   │   └── ride_card.dart
 │   ├── login_view.dart         # Authentication views
-│   └── choose_ride_view.dart    # Ride-related views
+│   └── choose_ride_view.dart   # Ride-related views
 ├── models/                     # Data models
 │   └── ride_model.dart
 └── services/                   # API services
