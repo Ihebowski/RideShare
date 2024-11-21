@@ -66,7 +66,11 @@ class NotificationCard extends StatelessWidget {
             builder: (context) {
               return AlertDialog(
                 title: Text(
-                  '',
+                  titleText,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                      color: Colors.black),
                 ),
                 content: Text(
                   message,
@@ -74,21 +78,29 @@ class NotificationCard extends StatelessWidget {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      // Handle the "Reject" action
                       Get.find<NotificationController>()
                           .handleResponse(notificationId, driverId, "decline");
-                      Navigator.of(context).pop(); // Close the dialog
+                      Navigator.of(context).pop();
                     },
-                    child: Text('Decline'),
+                    child: Text(
+                      'Decline',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
-                      // Handle the "Accept" action
                       Get.find<NotificationController>()
                           .handleResponse(notificationId, driverId, "accept");
-                      Navigator.of(context).pop(); // Close the dialog
+                      Navigator.of(context).pop();
                     },
-                    child: Text('Accept'),
+                    child: Text(
+                      'Accept',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               );

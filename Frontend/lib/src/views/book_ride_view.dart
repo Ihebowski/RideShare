@@ -270,7 +270,7 @@ class BookRideView extends StatelessWidget {
                       ),
                       child: bookRideController.isLoading.value
                           ? CircularProgressIndicator(
-                              color: Colors.black,
+                              color: Colors.white,
                             )
                           : const Text(
                               "Book Ride",

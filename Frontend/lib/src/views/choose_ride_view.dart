@@ -100,60 +100,42 @@ class _ChooseRideViewState extends State<ChooseRideView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 50.0,
-                          width: deviceWidth * 0.42,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.grey.shade100,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Go Now",
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 50.0,
-                          width: deviceWidth * 0.42,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.grey.shade600,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Schedule",
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 15.0),
+                    child: Text(
+                      "Available Rides",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    child: SizedBox(
-                      height: 300.0,
-                      child: Obx(() {
-                        if (rideController.driversList.isEmpty) {
-                          return Center(
+                    child: Obx(() {
+                      if (rideController.driversList.isEmpty) {
+                        return SizedBox(
+                          height: 100.0,
+                          child: Center(
                             child: Text("No drivers available."),
-                          );
-                        }
-                        return ListView.builder(
+                          ),
+                        );
+                      }
+                      int driversCount = rideController.driversList.length;
+
+                      double height;
+                      if (driversCount > 3) {
+                        height = 300.0;
+                      } else if (driversCount == 2) {
+                        height = 200.0;
+                      } else if (driversCount <= 1) {
+                        height = 100.0;
+                      } else {
+                        height = 150.0;
+                      }
+                      return SizedBox(
+                        height: height,
+                        child: ListView.builder(
                           shrinkWrap: true,
                           physics: const ScrollPhysics(),
                           padding: EdgeInsets.zero,
@@ -172,9 +154,9 @@ class _ChooseRideViewState extends State<ChooseRideView> {
                               ),
                             );
                           },
-                        );
-                      }),
-                    ),
+                        ),
+                      );
+                    }),
                   ),
                   Container(
                     height: 50.0,

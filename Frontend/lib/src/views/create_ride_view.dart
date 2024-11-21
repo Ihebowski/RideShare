@@ -192,10 +192,8 @@ class CreateRideView extends StatelessWidget {
                                   createRideController
                                       .isScheduleSelected.value = false;
                                   var todayDate = DateTime.now();
-                                  String formattedDate =
-                                      "${todayDate.day}/${todayDate.month}/${todayDate.year}";
                                   createRideController.selectedDate.value =
-                                      formattedDate;
+                                      todayDate.toIso8601String();
                                 },
                                 createRideController.isGoNowSelected.value,
                                 deviceWidth,
@@ -216,10 +214,8 @@ class CreateRideView extends StatelessWidget {
                                   );
 
                                   if (pickedDate != null) {
-                                    String formattedDate =
-                                        "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
                                     createRideController.selectedDate.value =
-                                        formattedDate;
+                                        pickedDate.toIso8601String();
                                   }
                                 },
                                 createRideController.isScheduleSelected.value,
