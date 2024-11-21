@@ -115,16 +115,16 @@ Feel free to reach out at [iheb.barrah@gmail.com](mailto:iheb.barrah@gmail.com) 
 - **Azyz Mejry**  
   *NodeJS Developer & IT Engineering Student at TEK-UP*
 
-Feel free to reach out at [azzizzflash@gmail.com](mailto:azzizzflash@gmail.com).
+Feel free to reach out at [azzizzflash@gmail.com](mailto:azzizzflash@gmail.com) or visit my [LinkedIn](https://www.linkedin.com/in/).
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/ihebowski/rideshare/issues).
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
