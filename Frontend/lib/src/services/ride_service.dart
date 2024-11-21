@@ -7,11 +7,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RideService {
   static final String baseUrl =
-      dotenv.env['API_URL'] ?? 'http://10.0.2.2:9001' + "/api/rides/";
+      (dotenv.env['API_URL'] ?? 'http://10.0.2.2:9001').replaceAll(RegExp(r'/$'), '') + "/api/rides";
 
-  Future<http.Response?> fetchDrivers(
-      List<double> startLocation, List<double> endLocation) async {
-    final String url = '${baseUrl}fetch-drivers';
+  Future<http.Response?> fetchDrivers(List<double> startLocation, List<double> endLocation) async {
+    final String url = '$baseUrl/fetch-drivers';
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -32,7 +31,7 @@ class RideService {
       } else {
         Get.snackbar(
           "Error",
-          "Failed to fetch drivers: ${response.statusCode}",
+          "Failed to fetch drivers: ${response.body}",
           backgroundColor: Colors.white.withOpacity(0.7),
           colorText: Colors.black,
         );
@@ -45,7 +44,7 @@ class RideService {
   }
 
   Future<http.Response?> bookRide(String rideId, String userId) async {
-    final String url = '${baseUrl}join';
+    final String url = '$baseUrl/join';
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -58,7 +57,7 @@ class RideService {
       if (response.statusCode == 200) {
         Get.snackbar(
           "Success",
-          response.body,
+          "Ride booked successfully!",
           backgroundColor: Colors.white.withOpacity(0.7),
           colorText: Colors.black,
         );
@@ -71,7 +70,6 @@ class RideService {
           backgroundColor: Colors.white.withOpacity(0.7),
           colorText: Colors.black,
         );
-        return null;
       } else if (response.statusCode == 401) {
         Get.snackbar(
           "Error",
@@ -79,16 +77,15 @@ class RideService {
           backgroundColor: Colors.white.withOpacity(0.7),
           colorText: Colors.black,
         );
-        return null;
       } else {
         Get.snackbar(
           "Error",
-          "Ride not found.",
+          "Failed to book ride: ${response.body}",
           backgroundColor: Colors.white.withOpacity(0.7),
           colorText: Colors.black,
         );
-        return null;
       }
+      return null;
     } catch (e) {
       print("Error joining ride: $e");
       return null;
@@ -102,7 +99,7 @@ class RideService {
       String time,
       int availableSeats,
       String userId) async {
-    final String url = '${baseUrl}create';
+    final String url = '$baseUrl/create';
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -127,7 +124,7 @@ class RideService {
       } else {
         Get.snackbar(
           "Error",
-          "Failed to fetch drivers: ${response.statusCode}",
+          "Failed to create ride: ${response.body}",
           backgroundColor: Colors.white.withOpacity(0.7),
           colorText: Colors.black,
         );

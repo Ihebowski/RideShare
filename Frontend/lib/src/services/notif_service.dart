@@ -8,7 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class NotificationService {
   static final String baseUrl =
-      dotenv.env['API_URL'] ?? 'http://10.0.2.2:9001' + "/api/rides/";
+      (dotenv.env['API_URL'] ?? 'http://10.0.2.2:9001').replaceAll(RegExp(r'/$'), '') + "/api/rides";
 
   Future<List<NotificationModel>> getNotificationById(String id) async {
     try {
@@ -25,11 +25,12 @@ class NotificationService {
             .map((notif) => NotificationModel.fromJson(notif))
             .toList();
       } else {
+        print("Failed to load notifications: ${response.body}");
         throw Exception('Failed to load notifications');
       }
     } catch (e) {
       print("Error fetching notifications: $e");
-      return [];
+      return []; // Returning an empty list in case of error
     }
   }
 
@@ -57,6 +58,7 @@ class NotificationService {
         );
         Get.off(() => MainView());
       } else {
+        print("Failed to send response: ${response.body}");
         Get.snackbar(
           "Error",
           "Failed to send response: ${response.body}",
@@ -66,6 +68,12 @@ class NotificationService {
       }
     } catch (e) {
       print("Error sending response: $e");
+      Get.snackbar(
+        "Error",
+        "An error occurred while sending response.",
+        backgroundColor: Colors.white.withOpacity(0.7),
+        colorText: Colors.black,
+      );
     }
   }
 }

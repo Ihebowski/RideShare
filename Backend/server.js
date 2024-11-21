@@ -35,30 +35,26 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 cron.schedule('0 0 * * *', async () => {
-    try {
-        
+    try {      
         const today = new Date().toISOString().split('T')[0];
-
-        // Find and delete rides with today's date
         const deletedRides = await Ride.deleteMany({
             date: today
         });
-
         console.log(`Deleted ${deletedRides.deletedCount} ride(s) scheduled for ${today}`);
     } catch (error) {
         console.error('Error deleting scheduled rides:', error);
     }
 });
 
+app.get('/', (req, res) => {
+    res.send('RideShare Running');
+  }
+);
+
 app.use('/api/users', userRoutes);
 app.use('/api/rides', rideRoutes);
 
-app.get('/', (req, res) => {
-    res.send('RideShare Running');
-  });
-
-// Start the server
-const PORT = process.env.PORT || 3000; // Use environment variable for port
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0',() => {
     console.log(`Server is running on port ${PORT}`);
 });
