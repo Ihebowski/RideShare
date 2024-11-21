@@ -67,7 +67,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ---
 
-## Project Structure
+## Project Structure (Frontend)
 
 ```bash
 lib/
@@ -78,16 +78,20 @@ lib/
 │   ├── auth_controller.dart    # Authentication logic
 │   └── ride_controller.dart    # Ride-related logic
 ├── views/                      # UI screens
-│   ├── auth/                   # Authentication views
-│   │   └── login_view.dart
-│   └── rides/                  # Ride-related views
-│       └── choose_ride_view.dart
+│   ├── widgets/                # Reusable widgets
+│   │   └── ride_card.dart
+│   ├── login_view.dart         # Authentication views
+│   └── choose_ride_view.dart    # Ride-related views
 ├── models/                     # Data models
 │   └── ride_model.dart
 ├── services/                   # API services
 │   └── ride_service.dart
-└── widgets/                    # Reusable widgets
-    └── ride_card.dart
+
+```
+
+## Project Structure (Backend)
+
+```bash
 ```
 
 ---
@@ -98,9 +102,9 @@ Below are the primary API endpoints for the app:
 
 - **User Registration**: `POST /api/users/register`
 - **User Login**: `POST /api/users/login`
-- **Post a Ride**: `POST /api/rides`
+- **Post a Ride**: `POST /api/rides/create`
 - **Join a Ride**: `POST /api/rides/join`
-- **Get All Rides**: `GET /api/rides`
+- **Get All Rides**: `GET /api/rides/fetch-drivers`
 
 ---
 
