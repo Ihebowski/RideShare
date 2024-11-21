@@ -17,6 +17,7 @@ class UserController extends GetxController {
 
   Future<void> checkUserLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    await Future.delayed(Duration(seconds: 5));
     if (prefs.getString('userId') != null) {
       Get.offAll(() => MainView());
     } else {

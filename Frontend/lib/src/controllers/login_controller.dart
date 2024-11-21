@@ -68,4 +68,24 @@ class LoginController extends GetxController {
     }
     isLoading.value = false;
   }
+
+  Future<void> loginGoogleUser() async {
+    Get.snackbar(
+      "Error",
+      "Sorry this feature is not available yet.",
+      backgroundColor: Colors.white.withOpacity(0.7),
+      colorText: Colors.black,
+    );
+    return;
+  }
+
+  Future<void> loginFacebookUser() async {
+    Get.snackbar(
+      "Error",
+      "Sorry this feature is not available yet.",
+      backgroundColor: Colors.white.withOpacity(0.7),
+      colorText: Colors.black,
+    );
+    return;
+  }
 }

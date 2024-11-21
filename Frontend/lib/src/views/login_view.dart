@@ -212,7 +212,7 @@ class LoginView extends StatelessWidget {
                           width: deviceWidth * 0.435,
                           margin: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: loginController.loginGoogleUser,
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
                                 Colors.white,
@@ -238,7 +238,7 @@ class LoginView extends StatelessWidget {
                           width: deviceWidth * 0.435,
                           margin: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: loginController.loginFacebookUser,
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
                                 Colors.white,
