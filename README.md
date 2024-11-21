@@ -84,8 +84,8 @@ lib/
 │   └── choose_ride_view.dart    # Ride-related views
 ├── models/                     # Data models
 │   └── ride_model.dart
-├── services/                   # API services
-│   └── ride_service.dart
+└──  services/                   # API services
+     └── ride_service.dart
 
 ```
 
