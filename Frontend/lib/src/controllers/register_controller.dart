@@ -86,7 +86,7 @@ class RegisterController extends GetxController {
           colorText: Colors.black,
         );
         Get.offAll(LoginView());
-      } {
+      } else {
         Get.snackbar(
           "Error",
           "Registration failed.",
